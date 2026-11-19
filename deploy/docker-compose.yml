@@ -25,6 +25,15 @@ services:
     image: ${LANZA_IMAGE:-ghcr.io/santiaguisimo90/lanza:latest}
     container_name: lanza
     restart: always
+    # Tras reiniciar Windows Docker revive los contenedores sin respetar depends_on:
+    # se espera aqui a que Temporal acepte conexiones antes de arrancar Lanza.
+    command:
+      - bash
+      - -c
+      - |
+        for i in $$(seq 1 90); do (echo > /dev/tcp/temporal/7233) 2>/dev/null && break; sleep 2; done
+        sleep 5
+        nginx && pnpm run pm2
     environment:
       MAIN_URL: https://${LANZA_DOMAIN}
       FRONTEND_URL: https://${LANZA_DOMAIN}

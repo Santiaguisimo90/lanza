@@ -64,7 +64,7 @@ Hazlo cuando decidas. Se pierde cero información si sigues el orden. (Verifica 
 - En Meta, cada permiso (pages_manage_posts, instagram_content_publish, threads_content_publish, etc.) hay que agregarlo en Casos de uso > Permisos y funciones antes de conectar; si no, sale "Invalid Scopes".
 - Mientras la app de Meta este en modo desarrollo solo funciona con tus cuentas; los evaluadores de Threads deben aceptar la invitacion en Threads > Configuracion > Permisos de sitios web > Invitaciones.
 
-- **Arranque tras reiniciar**: el orquestador de Lanza se conectaba a Temporal antes de que estuviera listo y se quedaba sin trabajar (Lanza abre y se ve bien, pero los posts programados no salen). Arreglado con un healthcheck en Temporal y `depends_on: service_healthy` en Lanza. Si ves posts atascados en cola: `docker compose restart lanza` (no uses `pm2 restart orchestrator`: deja el puerto 3002 ocupado).
+- **Arranque tras reiniciar**: el orquestador de Lanza se conectaba a Temporal antes de que estuviera listo y se quedaba sin trabajar (Lanza abre y se ve bien, pero los posts programados no salen). Arreglado en dos capas: healthcheck en Temporal + `depends_on: service_healthy` (vale para `docker compose up`) y, como Docker revive los contenedores tras un reinicio de Windows SIN respetar depends_on, el `command` de Lanza espera a que Temporal acepte conexiones (puerto 7233) antes de arrancar. Si ves posts atascados en cola: `docker compose restart lanza` (no uses `pm2 restart orchestrator`: deja el puerto 3002 ocupado).
 
 ## Cuánto cuesta al mes (estimado)
 | Pieza | USD/mes |
