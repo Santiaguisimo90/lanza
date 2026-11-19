@@ -80,6 +80,8 @@ services:
         condition: service_healthy
       lanza-redis:
         condition: service_healthy
+      temporal:
+        condition: service_healthy
 
   lanza-postgres:
     image: postgres:17-alpine
@@ -163,6 +165,12 @@ services:
       - TEMPORAL_NAMESPACE=default
     networks:
       - temporal-network
+    healthcheck:
+      test: ["CMD", "tctl", "--address", "temporal:7233", "cluster", "health"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
     volumes:
       - ../dynamicconfig:/etc/temporal/config/dynamicconfig
 
