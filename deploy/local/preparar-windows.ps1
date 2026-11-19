@@ -29,9 +29,12 @@ $envFile = Join-Path $aqui '.env'
 if (-not (Test-Path $envFile)) {
     function Nuevo-Secreto { $b = New-Object byte[] 32; [Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($b); [Convert]::ToBase64String($b) -replace '[+/=]', 'x' }
     $txt = Get-Content (Join-Path $aqui '.env.example') -Raw
-    foreach ($k in 'JWT_SECRET', 'POSTGRES_PASSWORD', 'TEMPORAL_DB_PASSWORD', 'ENCRYPTION_KEY') {
+    foreach ($k in 'JWT_SECRET', 'POSTGRES_PASSWORD', 'TEMPORAL_DB_PASSWORD') {
         $txt = $txt -replace "(?m)^$k=\s*$", "$k=$(Nuevo-Secreto)"
     }
+    # ENCRYPTION_KEY debe ser base64 de EXACTAMENTE 32 bytes (con su '=' final)
+    $kb = New-Object byte[] 32; [Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($kb)
+    $txt = $txt -replace '(?m)^ENCRYPTION_KEY=\s*$', ('ENCRYPTION_KEY=' + [Convert]::ToBase64String($kb))
     Set-Content -Path $envFile -Value $txt -Encoding ASCII
     Write-Host "Creado .env con 4 claves aleatorias. Falta llenar el token del tunel y R2 (ver PENDIENTES_SANTIAGO.md)."
     Write-Host "IMPORTANTE: guarda una copia de ENCRYPTION_KEY en tu gestor de claves."
@@ -48,3 +51,4 @@ Write-Host "Tarea 'Lanza-Arranque' creada (se ejecuta al iniciar sesion)."
 
 Write-Host ""
 Write-Host "Falta (manual, ver PENDIENTES_SANTIAGO.md): inicio de sesion automatico de Windows y 'Start Docker Desktop when you sign in'."
+
