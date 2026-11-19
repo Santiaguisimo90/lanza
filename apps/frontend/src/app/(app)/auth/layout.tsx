@@ -3,7 +3,6 @@ import { getT } from '@gitroom/react/translation/get.translation.service.backend
 export const dynamic = 'force-dynamic';
 import { ReactNode } from 'react';
 import loadDynamic from 'next/dynamic';
-import { TestimonialComponent } from '@gitroom/frontend/components/auth/testimonial.component';
 import { AttributionComponent } from '@gitroom/frontend/components/auth/attribution.component';
 import { LogoTextComponent } from '@gitroom/frontend/components/ui/logo-text.component';
 import { MantineWrapper } from '@gitroom/react/helpers/mantine.wrapper';
@@ -31,12 +30,31 @@ export default async function AuthLayout({
         </div>
         <div className="text-[36px] flex-1 pt-[88px] hidden lg:flex flex-col items-center">
           <div className="text-center">
-            Over <span className="text-[42px] text-[#FC69FF]">20,000+</span>{' '}
-            Entrepreneurs use
+            <span className="text-[42px] text-[#C8A45E]">Lanza</span>
             <br />
-            Postiz To Grow Their Social Presence
+            Tu publicador de redes sociales
           </div>
-          <TestimonialComponent />
+          <div className="text-[14px] text-[#9a9a9a] mt-[24px]">
+            Basado en{' '}
+            <a
+              className="underline"
+              href="https://github.com/gitroomhq/postiz-app"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Postiz
+            </a>{' '}
+            · AGPL-3.0 ·{' '}
+            <a
+              className="underline"
+              href="https://github.com/Santiaguisimo90/lanza"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Código fuente
+            </a>
+          </div>
+          
         </div>
       </div>
     </MantineWrapper>
