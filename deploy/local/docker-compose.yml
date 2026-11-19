@@ -1,0 +1,201 @@
+# Lanza en TU PC Windows (Docker Desktop) expuesta con Cloudflare Tunnel.
+# Sin puertos abiertos en el router. Memoria total de contenedores: ~4,6 GB (tope pedido: 6 GB).
+# Uso:  copiar .env.example a .env, rellenar, y correr:  docker compose up -d
+# Todas las claves salen de .env (nunca se suben al repo).
+name: lanza
+
+services:
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: lanza-tunnel
+    restart: always
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
+    mem_limit: 128m
+    networks:
+      - lanza-network
+    depends_on:
+      - lanza
+
+  lanza:
+    image: ${LANZA_IMAGE:-ghcr.io/santiaguisimo90/lanza:latest}
+    container_name: lanza
+    restart: always
+    environment:
+      MAIN_URL: https://${LANZA_DOMAIN}
+      FRONTEND_URL: https://${LANZA_DOMAIN}
+      NEXT_PUBLIC_BACKEND_URL: https://${LANZA_DOMAIN}/api
+      BACKEND_INTERNAL_URL: http://localhost:3000
+      JWT_SECRET: ${JWT_SECRET}
+      DATABASE_URL: postgresql://lanza:${POSTGRES_PASSWORD}@lanza-postgres:5432/lanza
+      REDIS_URL: redis://lanza-redis:6379
+      TEMPORAL_ADDRESS: temporal:7233
+      IS_GENERAL: 'true'
+      DISABLE_REGISTRATION: ${DISABLE_REGISTRATION:-false}
+      NOT_SECURED: 'false'
+      API_LIMIT: 100
+
+      # Medios en Cloudflare R2 (bucket lanza-media)
+      STORAGE_PROVIDER: cloudflare
+      CLOUDFLARE_ACCOUNT_ID: ${R2_ACCOUNT_ID}
+      CLOUDFLARE_ACCESS_KEY: ${R2_ACCESS_KEY_ID}
+      CLOUDFLARE_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY}
+      CLOUDFLARE_BUCKETNAME: ${R2_BUCKET:-lanza-media}
+      CLOUDFLARE_BUCKET_URL: ${R2_PUBLIC_URL}
+      CLOUDFLARE_REGION: auto
+
+      # Cifrado de tokens de las redes en la base
+      ENCRYPTION_PROVIDER: local
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+
+      EMAIL_FROM_NAME: Lanza
+
+      # Apps de desarrollador de cada red (ver PENDIENTES_SANTIAGO.md)
+      FACEBOOK_APP_ID: ${FACEBOOK_APP_ID:-}
+      FACEBOOK_APP_SECRET: ${FACEBOOK_APP_SECRET:-}
+      THREADS_APP_ID: ${THREADS_APP_ID:-}
+      THREADS_APP_SECRET: ${THREADS_APP_SECRET:-}
+      LINKEDIN_CLIENT_ID: ${LINKEDIN_CLIENT_ID:-}
+      LINKEDIN_CLIENT_SECRET: ${LINKEDIN_CLIENT_SECRET:-}
+      YOUTUBE_CLIENT_ID: ${YOUTUBE_CLIENT_ID:-}
+      YOUTUBE_CLIENT_SECRET: ${YOUTUBE_CLIENT_SECRET:-}
+      PINTEREST_CLIENT_ID: ${PINTEREST_CLIENT_ID:-}
+      PINTEREST_CLIENT_SECRET: ${PINTEREST_CLIENT_SECRET:-}
+      TIKTOK_CLIENT_ID: ${TIKTOK_CLIENT_ID:-}
+      TIKTOK_CLIENT_SECRET: ${TIKTOK_CLIENT_SECRET:-}
+    volumes:
+      - lanza-config:/config/
+    mem_limit: 2g
+    networks:
+      - lanza-network
+      - temporal-network
+    depends_on:
+      lanza-postgres:
+        condition: service_healthy
+      lanza-redis:
+        condition: service_healthy
+      temporal:
+        condition: service_started
+
+  lanza-postgres:
+    image: postgres:17-alpine
+    container_name: lanza-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: lanza
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: lanza
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data
+    mem_limit: 512m
+    networks:
+      - lanza-network
+    healthcheck:
+      test: pg_isready -U lanza -d lanza
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  lanza-redis:
+    image: redis:7.2
+    container_name: lanza-redis
+    restart: always
+    healthcheck:
+      test: redis-cli ping
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - redis-data:/data
+    mem_limit: 256m
+    networks:
+      - lanza-network
+
+  backup:
+    build: ./backup
+    container_name: lanza-backup
+    restart: always
+    environment:
+      TZ: America/Guayaquil
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      R2_ACCOUNT_ID: ${R2_ACCOUNT_ID}
+      R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID}
+      R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY}
+      R2_BACKUP_BUCKET: ${R2_BACKUP_BUCKET:-lanza-backups}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID:-}
+    mem_limit: 128m
+    networks:
+      - lanza-network
+    depends_on:
+      lanza-postgres:
+        condition: service_healthy
+
+  # ---- Temporal (motor de tareas programadas de Postiz) ----
+  temporal-elasticsearch:
+    container_name: temporal-elasticsearch
+    image: elasticsearch:7.17.27
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+      - xpack.security.enabled=false
+    mem_limit: 768m
+    networks:
+      - temporal-network
+    expose:
+      - 9200
+    volumes:
+      - temporal-es-data:/usr/share/elasticsearch/data
+
+  temporal-postgresql:
+    container_name: temporal-postgresql
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${TEMPORAL_DB_PASSWORD}
+      POSTGRES_USER: temporal
+    mem_limit: 384m
+    networks:
+      - temporal-network
+    expose:
+      - 5432
+    volumes:
+      - temporal-pg-data:/var/lib/postgresql/data
+
+  temporal:
+    container_name: temporal
+    image: temporalio/auto-setup:1.28.1
+    restart: always
+    depends_on:
+      - temporal-postgresql
+      - temporal-elasticsearch
+    environment:
+      - DB=postgres12
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=${TEMPORAL_DB_PASSWORD}
+      - POSTGRES_SEEDS=temporal-postgresql
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+      - ENABLE_ES=true
+      - ES_SEEDS=temporal-elasticsearch
+      - ES_VERSION=v7
+      - TEMPORAL_NAMESPACE=default
+    mem_limit: 512m
+    networks:
+      - temporal-network
+    volumes:
+      - ../../dynamicconfig:/etc/temporal/config/dynamicconfig
+
+volumes:
+  postgres-volume:
+  redis-data:
+  lanza-config:
+  temporal-es-data:
+  temporal-pg-data:
+
+networks:
+  lanza-network:
+  temporal-network:
+    name: temporal-network

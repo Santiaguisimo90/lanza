@@ -1,0 +1,15 @@
+name = "lanza-monitor"
+main = "src/index.ts"
+compatibility_date = "2026-11-01"
+
+[triggers]
+crons = ["*/5 * * * *"]
+
+[vars]
+LANZA_URL = "https://lanza.inmobiliarioec.com"
+
+# Opcional (recomendado): crea el KV con  npx wrangler kv namespace create ESTADO
+# y pega aqui el id que te muestre, descomentando estas lineas:
+# [[kv_namespaces]]
+# binding = "ESTADO"
+# id = "PEGA_AQUI_EL_ID"
