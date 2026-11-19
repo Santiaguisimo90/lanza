@@ -1,0 +1,5 @@
+# HTTPS automatico con Let's Encrypt. LANZA_DOMAIN viene de .env
+{$LANZA_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy lanza:5000
+}
