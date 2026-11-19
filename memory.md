@@ -1,12 +1,9 @@
 # memory.md — Lanza (fork de Postiz)
 
 ## Estado actual y próximo paso
-- Hecho: fork `Santiaguisimo90/lanza`, rama `lanza` sobre Postiz v2.26.0. 1 commit de marca (`feat(brand)`) + commits de `deploy/` (VPS con Caddy, local Windows con Cloudflare Tunnel, respaldo diario a R2, Worker `lanza-monitor`).
-- Imagen Docker `ghcr.io/santiaguisimo90/lanza` construida por GitHub Actions (OK). Visibilidad del paquete sin verificar (puede requerir ponerla pública).
-- Repartidor (iec-contenido): `publicar.ts`, `lanza.ts`, `revisar-lanza.ts` escritos y commiteados; typecheck OK, nunca probados contra un Lanza real.
-- Plan actual: correr Lanza en la PC de oficina (Docker Desktop + Cloudflare Tunnel) 1–2 semanas, luego migrar a VPS Hostinger KVM 2 (pasos en `deploy/docs/README_LANZA.md`).
-- Docker Desktop 4.99.0 instalado; WSL 2 instalado por Santi; falta REINICIAR Windows.
-- Próximo paso: Santi reinicia, abre Docker Desktop (marca "Start when you sign in") y dice "Docker listo". Luego: `deploy/local/preparar-windows.ps1` (admin), R2 (`lanza-media` público, `lanza-backups` privado), túnel de Cloudflare, `.env`, `docker compose up -d`, prueba de reinicio, app de Meta para Facebook/Instagram.
-- Espera de Santi: todo lo de `deploy/docs/PENDIENTES_SANTIAGO.md` (pasos 1–13).
-- Sin secretos en el repo. `deploy/local/.env` y `deploy/.env` están en .gitignore.
+- Lanza corre en la PC de oficina (Docker Desktop + Cloudflare Tunnel) en https://lanza.inmobiliarioec.com. Registro cerrado, respaldo diario a R2 (probado), medios en R2 (probado), Worker lanza-monitor con aviso a Telegram (activo).
+- Meta: app Lanza (ID 1345839520901176, modo desarrollo). Conectados Facebook (Inmobiliario-ec), Instagram (InmobiliarioEc) y Threads (inmobiliarioec).
+- Repartidor (iec-contenido): publicar.ts probado de punta a punta en Facebook (programado, publicado, borrado). Borrar desde Lanza no borra en Facebook.
+- Pendiente: probar Instagram y Threads (imagen), prueba de reinicio de Windows (<5 min), pasar LANZA_API_KEY a los secrets de iec-contenido en la nube, demas redes (LinkedIn, Google, Pinterest, YouTube, TikTok), rotar token R2 lanza-r2 (se expuso parcialmente en un log).
+- Sin secretos en el repo. .env en deploy/local ignorado por git.
 - Actualizado: 2026-11-19 · por: Claude

@@ -74,17 +74,14 @@ npx wrangler kv namespace create ESTADO
 - Luego, uno por uno (te pide el valor, no queda en pantalla ni en archivos): `npx wrangler secret put LANZA_API_KEY`, `... TELEGRAM_BOT_TOKEN`, `... TELEGRAM_CHAT_ID`, y `npx wrangler deploy`.
 - `LANZA_API_KEY` la sacas en Lanza → Settings → **Public API**.
 
-## 10. Facebook e Instagram (prioridad)
-1. https://developers.facebook.com/apps → **Crear app** → nombre **Lanza** → tipo **Business**.
-2. Agrega **Facebook Login for Business** e **Instagram** (API con inicio de sesión de Facebook).
-3. En *Valid OAuth Redirect URIs* pega: `https://lanza.inmobiliarioec.com/integrations/social/facebook` y `https://lanza.inmobiliarioec.com/integrations/social/instagram`
-4. App settings → Basic: **App ID** → `FACEBOOK_APP_ID`, **App secret** → `FACEBOOK_APP_SECRET`.
-5. Mientras la app esté en modo desarrollo y tú seas administrador, **no necesita revisión de Meta** (solo tus cuentas). Tu Instagram debe ser cuenta *Profesional* enlazada a la página de Facebook.
-6. `docker compose up -d` y en Lanza → *Add Channel* → Facebook e Instagram.
-- **Buffer no se toca.**
+## 10. Facebook, Instagram y Threads: HECHO (2026-11-19)
+- App de Meta **Lanza** (ID 1345839520901176) creada, en modo desarrollo, vinculada al portfolio Inmobiliario-ec. Sirve para tus propias cuentas sin revisión de Meta.
+- Conectados en Lanza: página **Inmobiliario-ec**, Instagram **InmobiliarioEc | Bienes Raices** y Threads **inmobiliarioec**. A Meta solo se le dio acceso a 1 negocio, 1 pagina y 1 cuenta de Instagram.
+- Pendiente de prueba: post publico en Instagram y en Threads (Facebook ya se probo).
+- Si algun dia Lanza pide reconectar un canal, repite "Agregar canal" en el calendario.
 
-## 11. Clave de API para la fábrica
-- Con Lanza andando: Settings → **Public API** → copia la clave y guárdala como secret `LANZA_API_KEY` (junto a `LANZA_URL=https://lanza.inmobiliarioec.com`) en iec-contenido.
+## 11. Clave de API para la fabrica: HECHO
+- La clave ya esta en el Worker lanza-monitor y en agents/05-repartidor/.dev.vars (archivo local, ignorado por git). Falta copiarla como secret de GitHub Actions / Cloudflare de iec-contenido cuando el Repartidor corra en la nube (LANZA_API_KEY y LANZA_URL).
 
 ## 12. Después, las demás redes (una por una, sin prisa)
 - **Threads**: producto Threads en la misma app de Meta → https://developers.facebook.com/docs/threads (redirect `.../integrations/social/threads`) → `THREADS_APP_ID/SECRET`.

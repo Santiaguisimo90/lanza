@@ -57,6 +57,13 @@ Hazlo cuando decidas. Se pierde cero información si sigues el orden. (Verifica 
 - [ ] `./backup.sh` sube un archivo nuevo a `lanza-backups`.
 - [ ] El Worker `lanza-monitor` no manda avisos y, al apagar Lanza 6 minutos, sí manda uno.
 
+## Lecciones aprendidas (no repetir)
+- **Borrar un post en Lanza NO lo borra en Facebook.** Para quitar un post ya publicado hay que borrarlo tambien en Facebook (Meta Business Suite > Publicaciones > Administrar > Eliminar) o desde la propia red.
+- **Nunca definir NOT_SECURED** en el compose (ni como "false"): Lanza solo mira si existe y entonces desactiva las cookies seguras; el cierre de sesion deja de funcionar.
+- **ENCRYPTION_KEY** debe ser base64 de exactamente 32 bytes (44 caracteres terminados en "=").
+- En Meta, cada permiso (pages_manage_posts, instagram_content_publish, threads_content_publish, etc.) hay que agregarlo en Casos de uso > Permisos y funciones antes de conectar; si no, sale "Invalid Scopes".
+- Mientras la app de Meta este en modo desarrollo solo funciona con tus cuentas; los evaluadores de Threads deben aceptar la invitacion en Threads > Configuracion > Permisos de sitios web > Invitaciones.
+
 ## Cuánto cuesta al mes (estimado)
 | Pieza | USD/mes |
 |---|---|
