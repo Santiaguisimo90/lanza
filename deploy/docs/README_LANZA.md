@@ -3,7 +3,7 @@
 Lanza es [Postiz](https://github.com/gitroomhq/postiz-app) (AGPL-3.0) con marca propia. Fork: https://github.com/Santiaguisimo90/lanza
 
 ## Cómo está armado
-- Rama `lanza` = Postiz **v2.26.0** + **1 commit de marca** (`feat(brand)`) + commits de despliegue (`deploy/`).
+- Rama `lanza` = Postiz **v2.26.0** + **commits de marca** (los que empiezan con `feat(brand)`: `git log --oneline --grep="feat(brand)"`) + commits de despliegue (`deploy/`).
 - Remoto `upstream` = el repo original de Postiz.
 - `deploy/local/` = Lanza en tu PC Windows (Docker Desktop + Cloudflare Tunnel). `deploy/` (raíz) = versión para VPS con Caddy. `deploy/monitor/` = Worker de Cloudflare que vigila Lanza desde fuera.
 - Las claves viven solo en el `.env` de cada despliegue (no se sube a git) y en secrets de Cloudflare.
@@ -18,7 +18,7 @@ Lanza es [Postiz](https://github.com/gitroomhq/postiz-app) (AGPL-3.0) con marca 
 ## Actualizar a una nueva versión de Postiz sin perder la marca
 1. `git fetch upstream --tags`
 2. `git checkout -b lanza-nueva vX.Y.Z` (la etiqueta nueva de Postiz).
-3. `git cherry-pick <hash de feat(brand)>` y luego los commits de `deploy`. Los conflictos suelen ser textos con "Postiz": se resuelven con "Lanza" manteniendo el pie "Basado en Postiz".
+3. `git cherry-pick $(git log --reverse --format=%h --grep="feat(brand)" lanza)` y luego los commits de `deploy`. Los conflictos suelen ser textos con "Postiz": se resuelven con "Lanza" manteniendo el pie "Basado en Postiz".
 4. `git push origin lanza-nueva:lanza`. GitHub Actions construye la imagen (`Lanza image`).
 5. Respaldo (`backup.sh now`) y luego `docker compose pull lanza && docker compose up -d`.
 - **No quites** los avisos AGPL-3.0 ni "Basado en Postiz" (pantalla de acceso, con enlace al código).

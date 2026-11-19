@@ -10,6 +10,6 @@ LANZA_URL = "https://lanza.inmobiliarioec.com"
 
 # Opcional (recomendado): crea el KV con  npx wrangler kv namespace create ESTADO
 # y pega aqui el id que te muestre, descomentando estas lineas:
-# [[kv_namespaces]]
-# binding = "ESTADO"
-# id = "PEGA_AQUI_EL_ID"
+[[kv_namespaces]]
+binding = "ESTADO"
+id = "3b5c1d279b3c445c944177f8419bf5c5"
