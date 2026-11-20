@@ -456,7 +456,8 @@ export class LinkedinPageProvider
       data: analytics[
         key as 'Page Views' | 'Organic Followers' | 'Paid Followers'
       ],
-      percentageChange: 5,
+      // Lanza: antes era un 5 fijo (tendencia falsa); 0 oculta el indicador
+      percentageChange: 0,
     }));
   }
 

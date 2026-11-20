@@ -59,6 +59,8 @@ export const useMenuItem = () => {
         </svg>
       ),
       path: '/agents',
+      // Lanza: sin clave de OpenAI el agente no funciona; se oculta del menu
+      hide: true,
     },
     {
       name: t('analytics', 'Analytics'),

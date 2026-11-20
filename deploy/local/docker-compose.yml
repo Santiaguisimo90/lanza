@@ -41,7 +41,7 @@ services:
       REDIS_URL: redis://lanza-redis:6379
       TEMPORAL_ADDRESS: temporal:7233
       IS_GENERAL: 'true'
-      DISABLE_REGISTRATION: ${DISABLE_REGISTRATION:-false}
+      DISABLE_REGISTRATION: ${DISABLE_REGISTRATION:-true}
       API_LIMIT: 100
 
       # Medios en Cloudflare R2 (bucket lanza-media)

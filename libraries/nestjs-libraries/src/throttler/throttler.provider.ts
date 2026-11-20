@@ -44,6 +44,12 @@ export class ThrottlerRealIpGuard extends ThrottlerGuard {
   protected override async getTracker(
     req: Record<string, any>
   ): Promise<string> {
+    // behind Cloudflare the real client is in cf-connecting-ip (set by the edge,
+    // cannot be spoofed); x-forwarded-for keeps whatever the client sent first
+    const cloudflare = String(req.headers?.['cf-connecting-ip'] || '').trim();
+    if (cloudflare) {
+      return cloudflare;
+    }
     const forwarded = String(req.headers?.['x-forwarded-for'] || '');
     return forwarded.split(',')[0].trim() || req.ip;
   }

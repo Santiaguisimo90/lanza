@@ -1,0 +1,227 @@
+// =====================================================================
+// Lanza: capa de marca sobre Postiz (azul marino + dorado de InmobiliarioEC)
+// Todo el cambio visual vive en este archivo para reaplicarlo facil al
+// actualizar Postiz. Se carga despues de colors.scss (gana por orden) y
+// los selectores con "html" ganan a las utilidades de Tailwind.
+// =====================================================================
+
+$navy: #091d3e; // fondo del logo
+$gold: #c8a45e; // la "L" del logo
+$gold-hover: #b48f4b;
+$gold-soft: #e2c788;
+$signal: #2f6fe0; // azul de senal para la IA (texto blanco encima ~4.7:1)
+
+:root {
+  --lanza-navy: #{$navy};
+  --lanza-gold: #{$gold};
+  --lanza-gold-hover: #{$gold-hover};
+  --lanza-gold-soft: #{$gold-soft};
+  --lanza-signal: #{$signal};
+  --lanza-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  .dark {
+    // superficies: tinta azul marino en vez de gris neutro
+    --new-back-drop: #02060f;
+    --new-settings: #142038;
+    --new-border: #1a2742;
+    --new-bgColor: #060b16;
+    --new-bgColorInner: #0b1424;
+    --new-sep: #2b3a59;
+    --new-bgLineColor: #152139;
+    --new-textItemFocused: #{$navy};
+    --new-textItemBlur: #8d9ab3;
+    --new-boxFocused: #{$gold};
+    --new-blockSeparator: #17233b;
+    --new-btn-simple: #17243e;
+    --new-btn-primary: #{$gold};
+    --new-ai-btn: #{$signal};
+    --new-box-hover: #12203a;
+    --new-table-border: #1c2a46;
+    --new-table-header: #0e1a2f;
+    --new-table-text: #97a3ba;
+    --new-table-text-focused: #{$gold-soft};
+    --new-small-strips: #0d1729;
+    --new-big-strips: #0a1322;
+    --new-col-color: #1a2742;
+    --new-menu-dots: #6f7d98;
+    --menu-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.6),
+      0 2px 6px rgba(0, 0, 0, 0.35);
+    --popup-color: rgba(2, 6, 15, 0.72);
+
+    --color-primary: #060b16;
+    --color-secondary: #0b1424;
+    --color-third: #0b1424;
+    --color-forth: #{$gold};
+    --color-seventh: #{$gold};
+    --color-input: #0e1a2f;
+    --color-input-text: #8d9ab3;
+  }
+
+  .light {
+    --new-back-drop: #{$navy};
+    --new-settings: #e9edf3;
+    --new-sep: #d3dae5;
+    --new-border: #e3e8ef;
+    --new-bgColor: #eef1f6;
+    --new-bgColorInner: #ffffff;
+    --new-bgLineColor: #e4e9f0;
+    --new-textItemFocused: #{$navy};
+    --new-textItemBlur: #5f6b80;
+    --new-boxFocused: #f3e9d2;
+    --new-btn-simple: #e9edf3;
+    --new-btn-primary: #{$gold};
+    --new-ai-btn: #2f6fe0;
+    --new-box-hover: #f3f5f9;
+    --new-table-text: #5f6b80;
+    --new-table-text-focused: #8a6a2c;
+    --popup-color: rgba(9, 29, 62, 0.25);
+
+    --color-forth: #{$gold};
+    --color-seventh: #{$gold};
+  }
+}
+
+// ---------------------------------------------------------------------
+// Colores morado/rosa escritos a mano en componentes de Postiz -> marca
+// ---------------------------------------------------------------------
+html {
+  .bg-btnPrimary,
+  .bg-\[\#612bd3\],
+  .bg-\[\#612BD3\],
+  .hover\:bg-\[\#612bd3\]:hover,
+  .hover\:bg-\[\#612BD3\]:hover {
+    background-color: var(--lanza-gold);
+    color: var(--lanza-navy);
+  }
+  // el texto encima del dorado va en azul marino (contraste ~7:1)
+  .bg-btnPrimary.text-white,
+  .bg-btnPrimary .text-white,
+  .bg-\[\#612bd3\].text-white,
+  .bg-\[\#612BD3\].text-white,
+  .bg-\[\#612bd3\] .text-white,
+  .bg-\[\#612BD3\] .text-white {
+    color: var(--lanza-navy);
+  }
+  .hover\:bg-\[\#5023b8\]:hover,
+  .hover\:bg-\[\#5023B8\]:hover,
+  .hover\:bg-\[\#612bd3\]\/80:hover,
+  .hover\:bg-\[\#612BD3\]\/80:hover {
+    background-color: var(--lanza-gold-hover);
+  }
+  .bg-\[\#612bd3\]\/10,
+  .bg-\[\#612BD3\]\/10 {
+    background-color: rgba(200, 164, 94, 0.12);
+  }
+  .text-\[\#612bd3\],
+  .text-\[\#612BD3\] {
+    color: var(--lanza-gold);
+  }
+  .border-\[\#612bd3\],
+  .border-\[\#612BD3\],
+  .focus\:border-\[\#612bd3\]:focus,
+  .focus\:border-\[\#612BD3\]:focus {
+    border-color: var(--lanza-gold);
+  }
+  .hover\:border-\[\#612bd3\]\/50:hover,
+  .hover\:border-\[\#612BD3\]\/50:hover,
+  .hover\:border-\[\#612bd3\]\/40:hover,
+  .hover\:border-\[\#612BD3\]\/40:hover {
+    border-color: rgba(200, 164, 94, 0.45);
+  }
+  .bg-\[\#fc69ff\],
+  .bg-\[\#FC69FF\] {
+    background-color: var(--lanza-gold-soft);
+    color: var(--lanza-navy);
+  }
+  .text-\[\#fc69ff\],
+  .text-\[\#FC69FF\],
+  .\!text-\[\#fc69ff\],
+  .\!text-\[\#FC69FF\] {
+    color: var(--lanza-gold-soft) !important;
+  }
+  .border-\[\#fc69ff\],
+  .border-\[\#FC69FF\] {
+    border-color: var(--lanza-gold-soft);
+  }
+  .bg-\[\#d82d7e\],
+  .bg-\[\#D82D7E\] {
+    background-color: var(--new-ai-btn);
+  }
+  .scrollbar-thumb-\[\#612ad5\],
+  .scrollbar-thumb-\[\#612AD5\] {
+    --scrollbar-thumb: #2b3a59 !important;
+  }
+}
+
+// ---------------------------------------------------------------------
+// Superficies del navegador: seleccion, cursor, foco, barras, numeros
+// ---------------------------------------------------------------------
+::selection {
+  background: rgba(200, 164, 94, 0.32);
+  color: inherit;
+}
+
+html {
+  caret-color: var(--lanza-gold);
+  accent-color: var(--lanza-gold);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+:focus-visible {
+  outline: 2px solid var(--lanza-gold);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2b3a59 transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #2b3a59;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #3b4d72;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+// cifras alineadas en tablas, calendario y analiticas
+table,
+time,
+.tabular-nums,
+[class*='text-[36px]'],
+[class*='text-[48px]'] {
+  font-variant-numeric: tabular-nums;
+}
+
+// transiciones con frenado suave (sin rebote)
+button,
+a,
+[role='button'] {
+  transition-timing-function: var(--lanza-ease);
+}
+
+// movimiento reducido: se mantienen los cambios de estado, sin desplazamientos
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-bounce {
+    animation: none !important;
+  }
+}

@@ -1074,7 +1074,8 @@ export class FacebookProvider extends SocialAbstract implements SocialProvider {
             : d.name === 'page_daily_follows'
             ? 'Page followers'
             : 'Media views',
-        percentageChange: 5,
+        // Lanza: antes era un 5 fijo (tendencia falsa); 0 oculta el indicador
+        percentageChange: 0,
         data: d?.values?.map((v: any) => ({
           total: sumValue(v.value),
           date: dayjs(v.end_time).format('YYYY-MM-DD'),

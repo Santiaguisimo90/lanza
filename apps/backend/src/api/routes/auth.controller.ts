@@ -54,6 +54,8 @@ export class AuthController {
     };
   }
 
+  @UseGuards(ThrottlerRealIpGuard)
+  @Throttle({ default: { limit: 10, ttl: 900000 } })
   @Post('/register')
   async register(
     @Req() req: Request,
@@ -128,6 +130,9 @@ export class AuthController {
     }
   }
 
+  // cap password guessing per client: 10 attempts every 15 minutes
+  @UseGuards(ThrottlerRealIpGuard)
+  @Throttle({ default: { limit: 10, ttl: 900000 } })
   @Post('/login')
   async login(
     @Req() req: Request,
@@ -192,6 +197,8 @@ export class AuthController {
     }
   }
 
+  @UseGuards(ThrottlerRealIpGuard)
+  @Throttle({ default: { limit: 10, ttl: 900000 } })
   @Post('/forgot')
   async forgot(@Body() body: ForgotPasswordDto) {
     try {
@@ -206,6 +213,8 @@ export class AuthController {
     }
   }
 
+  @UseGuards(ThrottlerRealIpGuard)
+  @Throttle({ default: { limit: 10, ttl: 900000 } })
   @Post('/forgot-return')
   async forgotReturn(@Body() body: ForgotReturnPasswordDto) {
     const reset = await this._authService.forgotReturn(body);
