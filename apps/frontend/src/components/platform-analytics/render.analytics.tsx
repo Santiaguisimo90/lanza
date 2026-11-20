@@ -53,6 +53,7 @@ const AnalyticsCard: FC<{
   total: string | number;
   index: number;
 }> = ({ item, total, index }) => {
+  const t = useT();
   const colorVariants = ['purple', 'green', 'blue'] as const;
   const color = colorVariants[index % colorVariants.length];
 
@@ -83,7 +84,11 @@ const AnalyticsCard: FC<{
               `}
             />
             <span className="text-[15px] font-medium text-newTableText">
-              {item.label}
+              {t(
+                'analytics_' +
+                  item.label.toLowerCase().replace(/[^a-z0-9]+/g, '_'),
+                item.label
+              )}
             </span>
           </div>
           {item.percentageChange !== undefined && (

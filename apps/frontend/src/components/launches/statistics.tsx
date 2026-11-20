@@ -124,7 +124,13 @@ export const StatisticsModal: FC<{
                               }`}
                             />
                             <span className="text-[15px] font-medium text-newTableText">
-                              {p.label}
+                              {t(
+                                'analytics_' +
+                                  p.label
+                                    .toLowerCase()
+                                    .replace(/[^a-z0-9]+/g, '_'),
+                                p.label
+                              )}
                             </span>
                           </div>
                         </div>
