@@ -39,10 +39,11 @@ export const ChartSocial: FC<{
   const chart = useRef<null | DrawChart>(null);
 
   const colorSchemes = {
+    // Lanza: la serie principal usa el dorado de la marca
     purple: {
-      start: 'rgba(97, 43, 211, 0.8)',
-      end: 'rgba(97, 43, 211, 0.1)',
-      border: 'rgb(97, 43, 211)',
+      start: 'rgba(200, 164, 94, 0.55)',
+      end: 'rgba(200, 164, 94, 0.04)',
+      border: 'rgb(200, 164, 94)',
     },
     green: {
       start: 'rgba(50, 213, 131, 0.8)',
