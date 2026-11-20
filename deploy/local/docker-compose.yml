@@ -70,6 +70,10 @@ services:
       YOUTUBE_CLIENT_SECRET: ${YOUTUBE_CLIENT_SECRET:-}
       PINTEREST_CLIENT_ID: ${PINTEREST_CLIENT_ID:-}
       PINTEREST_CLIENT_SECRET: ${PINTEREST_CLIENT_SECRET:-}
+      # X (Twitter): la app va en developer.x.com con OAuth 1.0a de lectura y escritura y
+      # callback https://lanza.inmobiliarioec.com/integrations/social/x
+      X_API_KEY: ${X_API_KEY:-}
+      X_API_SECRET: ${X_API_SECRET:-}
       TIKTOK_CLIENT_ID: ${TIKTOK_CLIENT_ID:-}
       TIKTOK_CLIENT_SECRET: ${TIKTOK_CLIENT_SECRET:-}
     volumes:
