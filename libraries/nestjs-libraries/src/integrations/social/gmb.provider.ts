@@ -427,7 +427,8 @@ export class GmbProvider extends SocialAbstract implements SocialProvider {
 
     // Build the local post request body
     const postBody: any = {
-      languageCode: 'en',
+      // Lanza: publicamos en espanol (con 'en' Google ofrecia "Traducir esta publicacion")
+      languageCode: 'es',
       summary: firstPost.message,
       topicType: settings?.topicType || 'STANDARD',
     };
