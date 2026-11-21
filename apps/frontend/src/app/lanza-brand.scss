@@ -282,3 +282,86 @@ html {
     }
   }
 }
+
+// ---------------------------------------------------------------------
+// Modo claro: el mismo cuidado que el oscuro
+// ---------------------------------------------------------------------
+html {
+  // Horas pasadas del calendario: rayas mas finas y suaves (antes eran muy marcadas).
+  .light .repeated-strip {
+    background: repeating-linear-gradient(
+      135deg,
+      #ffffff,
+      #ffffff 6px,
+      #f3f5f9 6px,
+      #f3f5f9 7px
+    );
+  }
+  .light .bg-newTableHeader.sticky {
+    background: linear-gradient(180deg, #ffffff, #f1f4f9);
+    border: 1px solid #e3e8ef;
+  }
+  .light .bg-newTableHeader.sticky:has(.bg-newTableTextFocused) {
+    border-color: rgba(200, 164, 94, 0.7);
+    box-shadow: inset 0 -2px 0 var(--lanza-gold);
+  }
+  .light button.bg-btnSimple {
+    border: 1px solid #d9e0ea;
+    &:hover {
+      border-color: #bcc7d8;
+      background: #e2e8f1;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------
+// Movil y tableta: zonas de toque, entradas y detalles tactiles
+// ---------------------------------------------------------------------
+html {
+  // Sin el destello gris al tocar y sin retraso de doble toque.
+  -webkit-tap-highlight-color: transparent;
+  button,
+  [role='button'],
+  a,
+  .cursor-pointer {
+    touch-action: manipulation;
+  }
+}
+
+@media (max-width: 1024px) {
+  html {
+    // Pestanas Dia / Semana / Mes / Lista: de 32 a 40 px de alto.
+    .pt-\[6px\].pb-\[5px\].cursor-pointer {
+      padding-top: 10px;
+      padding-bottom: 9px;
+    }
+    // Boton del menu lateral en movil: 44 px.
+    button.w-\[36px\].h-\[36px] {
+      width: 44px;
+      height: 44px;
+    }
+    // Interruptor de tema y campana, con zona comoda.
+    button.lz-theme-toggle {
+      width: 44px;
+      height: 44px;
+    }
+  }
+  // iOS hace zoom si una entrada tiene letra menor a 16 px.
+  input:not([type='checkbox']):not([type='radio']),
+  textarea,
+  select {
+    font-size: 16px;
+  }
+  // Respeta la barra inferior de los telefonos con gestos.
+  body {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+@media (hover: none) {
+  // Sin cursor no hay "hover": no dejar estilos pegados tras tocar.
+  html .dark button.bg-btnSimple:hover {
+    background: var(--new-btn-simple);
+    border-color: #223457;
+  }
+}

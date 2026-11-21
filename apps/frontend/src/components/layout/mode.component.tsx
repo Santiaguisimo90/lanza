@@ -3,11 +3,17 @@
 import { useCallback, useEffect, useState } from 'react';
 import useCookie from 'react-use-cookie';
 import EventEmitter from 'events';
+import { useT } from '@gitroom/react/translation/get.transation.service.client';
 
 export const modeEmitter = new EventEmitter();
 
 const ModeComponent = () => {
   const [mode, setMode] = useCookie('mode', 'dark');
+  const t = useT();
+  const label =
+    mode === 'dark'
+      ? t('switch_to_light_mode', 'Switch to light mode')
+      : t('switch_to_dark_mode', 'Switch to dark mode');
 
   const changeMode = useCallback(() => {
     modeEmitter.emit('mode', mode === 'dark' ? 'light' : 'dark');
@@ -19,7 +25,13 @@ const ModeComponent = () => {
     document.body.classList.add(mode);
   }, [mode]);
   return (
-    <div onClick={changeMode} className="select-none cursor-pointer">
+    <button
+      type="button"
+      onClick={changeMode}
+      aria-label={label}
+      title={label}
+      className="lz-theme-toggle select-none cursor-pointer w-[40px] h-[40px] flex items-center justify-center rounded-[8px] hover:bg-boxHover transition-colors"
+    >
       {mode === 'dark' ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +65,7 @@ const ModeComponent = () => {
           />
         </svg>
       )}
-    </div>
+    </button>
   );
 };
 export default ModeComponent;
