@@ -468,3 +468,38 @@ html {
     border-color: rgba(200, 164, 94, 0.45);
   }
 }
+
+// ---------------------------------------------------------------------
+// Etapa 5: redactor compacto (dialogo centrado en vez de pantalla completa)
+// ---------------------------------------------------------------------
+// El asistente de IA (burbuja redonda abajo a la derecha) necesita una clave de
+// OpenAI que Lanza no tiene: un boton que no puede funcionar se oculta.
+.copilotKitButton,
+.copilotKitPopup {
+  display: none !important;
+}
+
+@media (min-width: 1025px) {
+  html div[class*='p-[40px]']:has(#social-content) {
+    // Centrado, como dialogo: 1120 x 820 como maximo, con aire alrededor.
+    padding: max(24px, calc((100vh - 820px) / 2))
+      max(24px, calc((100vw - 1120px) / 2));
+    > div {
+      border: 1px solid var(--new-border);
+      box-shadow: 0 40px 120px -20px rgba(0, 0, 0, 0.75),
+        0 0 0 1px rgba(200, 164, 94, 0.08);
+    }
+    // El editor manda (2/3); la vista previa acompana (1/3).
+    div[class*='mobile:contents'] > div[class*='border-newBorder'] {
+      flex: 1 1 66%;
+    }
+    div[class*='mobile:contents'] > div[class*='border-newBorder'] ~ div {
+      flex: 0 1 34%;
+      min-width: 300px;
+    }
+    // Pie: que "Agregar nueva etiqueta" y "Repetir..." no se partan en dos lineas.
+    [class*='h-[44px]'] {
+      white-space: nowrap;
+    }
+  }
+}
