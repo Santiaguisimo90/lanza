@@ -336,7 +336,7 @@ html {
       padding-bottom: 9px;
     }
     // Boton del menu lateral en movil: 44 px.
-    button.w-\[36px\].h-\[36px] {
+    button[class*='w-[36px]'][class*='h-[36px]'] {
       width: 44px;
       height: 44px;
     }
