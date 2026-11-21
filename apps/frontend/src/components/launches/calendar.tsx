@@ -717,6 +717,19 @@ const errorLegible = (raw?: string | null) => {
       if (/^[\x20-\x7E\n\r\t]+$/.test(decoded)) text = decoded;
     }
   } catch (e) {}
+  // Workflow failures arrive as JSON: keep only the human messages, without stack traces.
+  try {
+    const parsed = JSON.parse(text);
+    const messages: string[] = [];
+    const walk = (node: any) => {
+      if (node && typeof node === 'object') {
+        if (typeof node.message === 'string') messages.push(node.message);
+        Object.values(node).forEach(walk);
+      }
+    };
+    walk(parsed);
+    if (messages.length) text = Array.from(new Set(messages)).join(' · ');
+  } catch (e) {}
   text = text.replace(/\s+/g, ' ').trim();
   return text.length > 180 ? text.slice(0, 177) + '...' : text;
 };

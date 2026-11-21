@@ -555,3 +555,14 @@ html {
     height: 40px;
   }
 }
+
+// ---------------------------------------------------------------------
+// Etapa 7: pantalla de Inicio
+// ---------------------------------------------------------------------
+.lz-home-card {
+  transition: border-color 0.2s var(--lanza-ease), box-shadow 0.2s var(--lanza-ease);
+  &:hover {
+    border-color: rgba(200, 164, 94, 0.35);
+    box-shadow: 0 10px 28px -16px rgba(0, 0, 0, 0.55);
+  }
+}
