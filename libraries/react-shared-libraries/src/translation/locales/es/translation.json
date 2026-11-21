@@ -1167,5 +1167,6 @@
   "analytics_engagement_rate": "Tasa de interacción",
   "analytics_unique_impressions": "Impresiones únicas",
   "analytics_profile_views": "Visitas al perfil",
-  "analytics_website_clicks": "Clics al sitio web"
+  "analytics_website_clicks": "Clics al sitio web",
+  "are_you_sure_you_want_to_close_this_modal": "¿Seguro que quieres cerrar esta ventana?"
 }

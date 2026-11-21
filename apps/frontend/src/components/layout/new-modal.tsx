@@ -15,6 +15,7 @@ import { Button } from '@gitroom/react/form/button';
 import { useHotkeys } from 'react-hotkeys-hook';
 import clsx from 'clsx';
 import { EventEmitter } from 'events';
+import { useT } from '@gitroom/react/translation/get.transation.service.client';
 
 interface OpenModalInterface {
   title?: any;
@@ -416,6 +417,7 @@ export const DecisionEverywhere: FC = () => {
 
 export const useDecisionModal = () => {
   const modals = useModals();
+  const t = useT();
   const open = useCallback(
     ({
       title = 'Are you sure?',
@@ -426,6 +428,13 @@ export const useDecisionModal = () => {
       destructive = false,
       newRes = undefined as any,
     } = {}) => {
+      // Los textos por defecto salian en ingles aunque la interfaz este en espanol.
+      if (title === 'Are you sure?') title = t('are_you_sure', 'Are you sure?');
+      if (description === 'Are you sure you want to close this modal?') {
+        description = t('are_you_sure_you_want_to_close_this_modal', 'Are you sure you want to close this modal?');
+      }
+      if (approveLabel === 'Yes') approveLabel = t('yes', 'Yes');
+      if (cancelLabel === 'No') cancelLabel = t('no', 'No');
       return new Promise<boolean>((res) => {
         modals.openModal({
           title,
@@ -445,7 +454,7 @@ export const useDecisionModal = () => {
         });
       });
     },
-    [modals]
+    [modals, t]
   );
 
   return { open };
