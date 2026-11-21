@@ -10,7 +10,7 @@ Lanza es [Postiz](https://github.com/gitroomhq/postiz-app) (AGPL-3.0) con marca 
 - Medios en R2 `lanza-media` (público). Respaldos en R2 `lanza-backups` (privado).
 
 ## Día a día en tu PC
-- Encender/actualizar: `cd deploy\local` y `docker compose pull && docker compose up -d`.
+- Encender/actualizar: `cd deploy\local` y `docker compose pull && docker compose up -d && docker image prune -f` (el último borra las versiones viejas de la imagen, ~7 GB cada una, para que no se llene el disco C:).
 - Estado: `docker compose ps`. Logs: `docker compose logs -f lanza`.
 - Respaldo manual: `docker exec lanza-backup /usr/local/bin/backup.sh now`.
 - Al reiniciar Windows todo vuelve solo: inicio de sesión automático → Docker Desktop → los contenedores (`restart: always`) + tarea "Lanza-Arranque" de respaldo.
@@ -20,7 +20,7 @@ Lanza es [Postiz](https://github.com/gitroomhq/postiz-app) (AGPL-3.0) con marca 
 2. `git checkout -b lanza-nueva vX.Y.Z` (la etiqueta nueva de Postiz).
 3. `git cherry-pick $(git log --reverse --format=%h --grep="feat(brand)" lanza)` y luego los commits de `deploy`. Los conflictos suelen ser textos con "Postiz": se resuelven con "Lanza" manteniendo el pie "Basado en Postiz".
 4. `git push origin lanza-nueva:lanza`. GitHub Actions construye la imagen (`Lanza image`).
-5. Respaldo (`backup.sh now`) y luego `docker compose pull lanza && docker compose up -d`.
+5. Respaldo (`backup.sh now`) y luego `docker compose pull lanza && docker compose up -d && docker image prune -f`.
 - **No quites** los avisos AGPL-3.0 ni "Basado en Postiz" (pantalla de acceso, con enlace al código).
 
 ## Restaurar un respaldo
