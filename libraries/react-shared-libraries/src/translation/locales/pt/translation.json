@@ -937,5 +937,11 @@
   "connect_link_expired_description": "Os links de conexão funcionam por uma hora. Peça um novo a quem enviou este para você.",
   "are_you_sure_you_want_to_close_this_modal": "Tem certeza de que quer fechar esta janela?",
   "switch_to_light_mode": "Mudar para o modo claro",
-  "switch_to_dark_mode": "Mudar para o modo escuro"
+  "switch_to_dark_mode": "Mudar para o modo escuro",
+  "with_error": "Com erro",
+  "no_error_posts": "Nenhuma publicação com erro",
+  "retry_now": "Tentar de novo",
+  "retry_scheduled": "Nova tentativa agendada: sai em cerca de um minuto",
+  "retry_failed": "Não foi possível tentar de novo",
+  "error_publishing": "Esta publicação não pôde ser publicada"
 }

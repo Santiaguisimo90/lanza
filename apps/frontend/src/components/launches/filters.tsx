@@ -276,6 +276,7 @@ export const Filters = () => {
     { value: 'scheduled', label: t('scheduled', 'Scheduled') },
     { value: 'draft', label: t('draft', 'Draft') },
     { value: 'published', label: t('published', 'Published') },
+    { value: 'error', label: t('with_error', 'With error') },
   ];
 
   const previousPage = useCallback(() => {

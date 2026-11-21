@@ -311,14 +311,17 @@ export class PostsRepository {
         ? { state: State.DRAFT }
         : stateFilter === 'published'
         ? { state: State.PUBLISHED }
+        : stateFilter === 'error'
+        ? { state: State.ERROR }
         : {
             state: {
               in: [State.QUEUE, State.DRAFT, State.PUBLISHED, State.ERROR],
             },
           };
 
+    // Published and failed posts are already in the past: newest first.
     const orderDirection: 'asc' | 'desc' =
-      stateFilter === 'published' ? 'desc' : 'asc';
+      stateFilter === 'published' || stateFilter === 'error' ? 'desc' : 'asc';
 
     const where = {
       AND: [
@@ -333,7 +336,7 @@ export class PostsRepository {
       ...stateAndDate,
       // Published posts were already posted (publishDate in the past), so fetch
       // all of them; everything else stays upcoming. Ordering handles the rest.
-      ...(stateFilter === 'published'
+      ...(stateFilter === 'published' || stateFilter === 'error'
         ? {}
         : { publishDate: { gte: dayjs.utc().toDate() } }),
       deletedAt: null as Date | null,
@@ -371,6 +374,7 @@ export class PostsRepository {
           releaseURL: true,
           releaseId: true,
           state: true,
+          error: true,
           intervalInDays: true,
           group: true,
           creationMethod: true,

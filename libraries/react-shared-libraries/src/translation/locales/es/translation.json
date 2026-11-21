@@ -1170,5 +1170,11 @@
   "analytics_website_clicks": "Clics al sitio web",
   "are_you_sure_you_want_to_close_this_modal": "¿Seguro que quieres cerrar esta ventana?",
   "switch_to_light_mode": "Cambiar a modo claro",
-  "switch_to_dark_mode": "Cambiar a modo oscuro"
+  "switch_to_dark_mode": "Cambiar a modo oscuro",
+  "with_error": "Con error",
+  "no_error_posts": "No hay publicaciones con error",
+  "retry_now": "Reintentar ahora",
+  "retry_scheduled": "Reintento programado: sale en un minuto aproximadamente",
+  "retry_failed": "No se pudo reintentar esta publicación",
+  "error_publishing": "No se pudo publicar esta publicación"
 }

@@ -707,10 +707,53 @@ export const MonthView = () => {
     </div>
   );
 };
+// The stored error can be plain text or base64 of a JSON/text payload: show a short readable line.
+const errorLegible = (raw?: string | null) => {
+  if (!raw) return '';
+  let text = raw;
+  try {
+    if (/^[A-Za-z0-9+/=\s]{24,}$/.test(raw)) {
+      const decoded = atob(raw.replace(/\s/g, ''));
+      if (/^[\x20-\x7E\n\r\t]+$/.test(decoded)) text = decoded;
+    }
+  } catch (e) {}
+  text = text.replace(/\s+/g, ' ').trim();
+  return text.length > 180 ? text.slice(0, 177) + '...' : text;
+};
+
 export const ListView = () => {
   const t = useT();
   const user = useUser();
-  const { integrations, loading, listPosts, listState } = useCalendar();
+  const { integrations, loading, listPosts, listState, reloadCalendarView } =
+    useCalendar();
+  const fetch = useFetch();
+  const toaster = useToaster();
+
+  // Retry = reschedule the failed post one minute from now (same endpoint the calendar
+  // drag-and-drop uses), which puts it back in the queue and restarts its workflow.
+  const retryPost = useCallback(
+    (post: any) => async () => {
+      const response = await fetch(`/posts/${post.id}/date`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          date: newDayjs().add(1, 'minute').utc().format('YYYY-MM-DDTHH:mm:ss'),
+          action: 'schedule',
+          republish: true,
+        }),
+      });
+      if (response.status === 200 || response.status === 201) {
+        toaster.show(
+          t('retry_scheduled', 'Retry scheduled: it goes out in about a minute'),
+          'success'
+        );
+      } else {
+        toaster.show(t('retry_failed', "Couldn't retry this post"), 'warning');
+      }
+      reloadCalendarView();
+    },
+    [fetch, toaster, reloadCalendarView, t]
+  );
+
   const emptyMessage =
     listState === 'scheduled'
       ? t('no_upcoming_posts', 'No upcoming posts scheduled')
@@ -718,6 +761,8 @@ export const ListView = () => {
       ? t('no_draft_posts', 'No draft posts')
       : listState === 'published'
       ? t('no_published_posts', 'No published posts')
+      : listState === 'error'
+      ? t('no_error_posts', 'No posts with errors')
       : t('no_posts', 'No posts');
 
   // Use shared post actions hook
@@ -762,8 +807,8 @@ export const ListView = () => {
             </div>
             <div className="flex flex-col gap-[10px] mb-[20px] px-[10px]">
               {datePosts.map((post) => (
+                <div key={post.id} className="flex flex-col gap-[6px]">
                 <CalendarItem
-                  key={post.id}
                   display="day"
                   isBeforeNow={false}
                   date={fromUtc(post.publishDate)}
@@ -779,6 +824,22 @@ export const ListView = () => {
                   deletePost={deletePost(post)}
                   showTime={true}
                 />
+                {post.state === 'ERROR' && (
+                  <div className="lz-error-row">
+                    <div className="lz-error-text">
+                      {errorLegible(post.error) ||
+                        t('error_publishing', 'This post could not be published')}
+                    </div>
+                    <button
+                      type="button"
+                      className="lz-retry-btn"
+                      onClick={retryPost(post)}
+                    >
+                      {t('retry_now', 'Retry now')}
+                    </button>
+                  </div>
+                )}
+                </div>
               ))}
             </div>
           </Fragment>

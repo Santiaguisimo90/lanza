@@ -939,5 +939,11 @@
   "connect_link_expired_description": "Connection links work for one hour. Ask whoever sent it to you for a new one.",
   "are_you_sure_you_want_to_close_this_modal": "Are you sure you want to close this modal?",
   "switch_to_light_mode": "Switch to light mode",
-  "switch_to_dark_mode": "Switch to dark mode"
+  "switch_to_dark_mode": "Switch to dark mode",
+  "with_error": "With error",
+  "no_error_posts": "No posts with errors",
+  "retry_now": "Retry now",
+  "retry_scheduled": "Retry scheduled: it goes out in about a minute",
+  "retry_failed": "Couldn't retry this post",
+  "error_publishing": "This post could not be published"
 }
