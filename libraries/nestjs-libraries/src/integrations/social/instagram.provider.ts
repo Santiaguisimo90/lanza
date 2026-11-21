@@ -785,6 +785,7 @@ export class InstagramProvider
           )}`
         : ``;
     const isTrialReel = this.assetBoolean(firstPost.settings.is_trial_reel);
+    const isReelsOnly = this.assetBoolean(firstPost.settings.reels_only);
     const medias = await Promise.all(
       firstPost?.media?.map(async (m) => {
         const caption =
@@ -820,6 +821,15 @@ export class InstagramProvider
         const altText =
           m.alt && !isStory && !hasExtension(m.path, 'mp4')
             ? `&alt_text=${encodeURIComponent(m.alt)}`
+            : ``;
+
+        // share_to_feed only exists on REELS containers (single video, not a story)
+        const reelsOnlyParam =
+          isReelsOnly &&
+          !isStory &&
+          firstPost?.media?.length === 1 &&
+          hasExtension(m.path, 'mp4')
+            ? `&share_to_feed=false`
             : ``;
 
         const trialParams = isTrialReel
@@ -861,7 +871,7 @@ export class InstagramProvider
 
         const { id: photoId } = await (
           await this.fetch(
-            `https://${type}/${META_GRAPH_API_VERSION}/${id}/media?${mediaType}${altText}${isCarousel}${itemCollaborators}${trialParams}${audioConfiguration}&access_token=${accessToken}${caption}`,
+            `https://${type}/${META_GRAPH_API_VERSION}/${id}/media?${mediaType}${altText}${isCarousel}${itemCollaborators}${trialParams}${reelsOnlyParam}${audioConfiguration}&access_token=${accessToken}${caption}`,
             {
               method: 'POST',
             }

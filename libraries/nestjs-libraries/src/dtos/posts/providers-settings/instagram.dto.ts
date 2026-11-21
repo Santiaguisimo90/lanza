@@ -56,6 +56,11 @@ export class InstagramDto {
   @IsOptional()
   is_trial_reel?: boolean;
 
+  // Reel only: publish it in the Reels tab and keep it out of the profile feed
+  // (Graph API share_to_feed=false). Ignored for photos, carousels and stories.
+  @IsOptional()
+  reels_only?: boolean;
+
   @IsIn(['MANUAL', 'SS_PERFORMANCE'])
   @IsOptional()
   graduation_strategy?: 'MANUAL' | 'SS_PERFORMANCE';

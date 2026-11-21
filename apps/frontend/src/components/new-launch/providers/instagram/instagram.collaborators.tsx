@@ -92,6 +92,16 @@ const InstagramCollaborators: FC<{
             label={t('trial_reel', 'Trial Reel (share only to non-followers first)')}
           />
 
+          <Checkbox
+            {...register('reels_only', {
+              value: false,
+            })}
+            label={t(
+              'reels_only',
+              'Reels only (video: do not show it in the profile feed)'
+            )}
+          />
+
           {isTrialReel && (
             <Select
               label="Graduation Strategy"
