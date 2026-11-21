@@ -442,3 +442,29 @@ html {
     max-height: 24px !important;
   }
 }
+
+// ---------------------------------------------------------------------
+// Etapa 4 (calendario): "ver mas" como pastilla y hora legible en tarjetas
+// ---------------------------------------------------------------------
+.lz-more-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  margin: 4px auto 2px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  color: var(--new-textItemBlur);
+  background: var(--new-btn-simple);
+  border: 1px solid var(--new-border);
+  transition: color 0.2s var(--lanza-ease), border-color 0.2s var(--lanza-ease),
+    background-color 0.2s var(--lanza-ease);
+  &:hover {
+    color: var(--lanza-gold-soft);
+    border-color: rgba(200, 164, 94, 0.45);
+  }
+}

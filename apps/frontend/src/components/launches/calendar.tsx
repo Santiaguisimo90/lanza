@@ -5,7 +5,9 @@ import React, {
   Fragment,
   memo,
   useCallback,
+  useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import {
@@ -526,6 +528,17 @@ export const DayView = () => {
 export const WeekView = () => {
   const { startDate, endDate } = useCalendar();
   const t = useT();
+  const scroller = useRef<HTMLDivElement>(null);
+
+  // La rejilla abre en la hora actual (una hora antes), no en la medianoche vacia.
+  useEffect(() => {
+    const el = scroller.current;
+    if (!el) return;
+    const target = el.querySelector<HTMLElement>(
+      `[data-hour="${Math.max(0, newDayjs().hour() - 1)}"]`
+    );
+    if (target) el.scrollTop = Math.max(0, target.offsetTop - 70);
+  }, [startDate]);
 
   // Use dayjs to get localized day names
   const localizedDays = useMemo(() => {
@@ -548,7 +561,10 @@ export const WeekView = () => {
   return (
     <div className="flex flex-col text-textColor flex-1">
       <div className="flex-1 relative">
-        <div className="grid [grid-template-columns:136px_repeat(7,_minmax(0,_1fr))] tablet:[grid-template-columns:72px_repeat(7,_minmax(100px,_1fr))] gap-[4px] rounded-[10px] absolute h-full start-0 top-0 w-full overflow-auto scrollbar scrollbar-thumb-fifth scrollbar-track-newBgColor">
+        <div
+          ref={scroller}
+          className="grid [grid-template-columns:136px_repeat(7,_minmax(0,_1fr))] tablet:[grid-template-columns:72px_repeat(7,_minmax(100px,_1fr))] gap-[4px] rounded-[10px] absolute h-full start-0 top-0 w-full overflow-auto scrollbar scrollbar-thumb-fifth scrollbar-track-newBgColor"
+        >
           <div className="z-10 bg-newTableHeader flex justify-center items-center flex-col h-[62px] rounded-[8px] sticky top-0"></div>
           {localizedDays.map((day, index) => (
             <div
@@ -574,7 +590,10 @@ export const WeekView = () => {
           ))}
           {hours.map((hour) => (
             <Fragment key={hour}>
-              <div className="p-2 pe-4 tablet:px-[4px] text-center items-center justify-center flex text-[14px] tablet:text-[12px] tablet:whitespace-nowrap text-newTableText">
+              <div
+                data-hour={hour}
+                className="p-2 pe-4 tablet:px-[4px] text-center items-center justify-center flex text-[14px] tablet:text-[12px] tablet:whitespace-nowrap text-newTableText"
+              >
                 {convertTimeFormatBasedOnLocality(hour)}
               </div>
               {localizedDays.map((day, indexDay) => (
@@ -1090,13 +1109,14 @@ export const CalendarColumn: FC<{
                   post={post}
                   integrations={integrations}
                   deletePost={deletePost(post)}
+                  showTime={display === 'week' || display === 'day'}
                 />
               </div>
             </div>
           ))}
           {!showAll && postList.length > 3 && (
             <div
-              className="text-center hover:underline py-[5px] text-textColor"
+              className="lz-more-chip"
               onClick={showAllFunc}
             >
               <span className={clsx(display === 'month' && 'mobile:hidden')}>
@@ -1111,7 +1131,7 @@ export const CalendarColumn: FC<{
           )}
           {showAll && postList.length > 3 && (
             <div
-              className="text-center hover:underline py-[5px]"
+              className="lz-more-chip"
               onClick={showLessFunc}
             >
               <span className={clsx(display === 'month' && 'mobile:hidden')}>
