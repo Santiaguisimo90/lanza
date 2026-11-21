@@ -529,15 +529,24 @@ export const WeekView = () => {
   const { startDate, endDate } = useCalendar();
   const t = useT();
   const scroller = useRef<HTMLDivElement>(null);
+  const userScrolled = useRef(false);
 
   // La rejilla abre en la hora actual (una hora antes), no en la medianoche vacia.
+  // Se reintenta mientras las publicaciones cargan (las filas cambian de alto) y se
+  // deja de insistir en cuanto la persona mueve la vista.
   useEffect(() => {
-    const el = scroller.current;
-    if (!el) return;
-    const target = el.querySelector<HTMLElement>(
-      `[data-hour="${Math.max(0, newDayjs().hour() - 1)}"]`
-    );
-    if (target) el.scrollTop = Math.max(0, target.offsetTop - 70);
+    userScrolled.current = false;
+    const go = () => {
+      const el = scroller.current;
+      if (!el || userScrolled.current) return;
+      const target = el.querySelector<HTMLElement>(
+        `[data-hour="${Math.max(0, newDayjs().hour() - 1)}"]`
+      );
+      if (target) el.scrollTop = Math.max(0, target.offsetTop - 70);
+    };
+    go();
+    const timers = [300, 800, 1600].map((ms) => setTimeout(go, ms));
+    return () => timers.forEach(clearTimeout);
   }, [startDate]);
 
   // Use dayjs to get localized day names
@@ -563,6 +572,8 @@ export const WeekView = () => {
       <div className="flex-1 relative">
         <div
           ref={scroller}
+          onWheel={() => (userScrolled.current = true)}
+          onTouchMove={() => (userScrolled.current = true)}
           className="grid [grid-template-columns:136px_repeat(7,_minmax(0,_1fr))] tablet:[grid-template-columns:72px_repeat(7,_minmax(100px,_1fr))] gap-[4px] rounded-[10px] absolute h-full start-0 top-0 w-full overflow-auto scrollbar scrollbar-thumb-fifth scrollbar-track-newBgColor"
         >
           <div className="z-10 bg-newTableHeader flex justify-center items-center flex-col h-[62px] rounded-[8px] sticky top-0"></div>
