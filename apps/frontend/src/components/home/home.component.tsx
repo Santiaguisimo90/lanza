@@ -5,6 +5,7 @@ import Link from 'next/link';
 import useSWR from 'swr';
 import clsx from 'clsx';
 import { useFetch } from '@gitroom/helpers/utils/custom.fetch';
+import { expandPostsList } from '@gitroom/helpers/utils/posts.list.minify';
 import { useT } from '@gitroom/react/translation/get.transation.service.client';
 import { useUser } from '@gitroom/frontend/components/layout/user.context';
 import { useIntegrationList } from '@gitroom/frontend/components/launches/helpers/use.integration.list';
@@ -36,7 +37,8 @@ type PostsList = { posts: ListedPost[]; total: number };
 const usePostsList = (state: 'scheduled' | 'published' | 'error', limit: number) => {
   const fetch = useFetch();
   const load = useCallback(
-    async (path: string) => (await fetch(path)).json() as Promise<PostsList>,
+    async (path: string) =>
+      expandPostsList(await (await fetch(path)).json()) as PostsList,
     []
   );
   return useSWR(`/posts/list?state=${state}&limit=${limit}`, load, {
@@ -198,7 +200,7 @@ export const HomeComponent: FC = () => {
   const disabled = (integrations || []).filter((i: any) => i.disabled);
 
   return (
-    <div className="flex flex-1 flex-col gap-[20px] overflow-auto pb-[20px] scrollbar scrollbar-thumb-fifth scrollbar-track-newBgColor">
+    <div className="flex flex-1 flex-col gap-[20px] overflow-auto p-[24px] mobile:p-[14px] scrollbar scrollbar-thumb-fifth scrollbar-track-newBgColor">
       <div className="flex flex-col gap-[4px]">
         <h1 className="text-[24px] font-[600]">
           {greeting}
