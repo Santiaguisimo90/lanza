@@ -365,3 +365,80 @@ html {
     border-color: #223457;
   }
 }
+
+// ---------------------------------------------------------------------
+// Etapa 3: tarjetas del calendario, advertencia del editor y analiticas
+// ---------------------------------------------------------------------
+html {
+  // Tarjeta del calendario: la barra de acciones (duplicar, vista previa, borrar)
+  // estaba siempre visible como una franja dorada vacia. Ahora es un filo fino
+  // que se abre al pasar el cursor o al enfocar con teclado.
+  div.group[class*='rounded-[10px]'] > div[class*='bg-btnPrimary'][class*='h-[24px]'] {
+    height: 4px !important;
+    min-height: 4px !important;
+    max-height: 4px !important;
+    overflow: hidden;
+    padding-top: 0;
+    padding-bottom: 0;
+    transition: height 0.18s var(--lanza-ease), min-height 0.18s var(--lanza-ease),
+      max-height 0.18s var(--lanza-ease);
+    > * {
+      opacity: 0;
+      transition: opacity 0.12s var(--lanza-ease);
+    }
+  }
+  div.group[class*='rounded-[10px]']:hover
+    > div[class*='bg-btnPrimary'][class*='h-[24px]'],
+  div.group[class*='rounded-[10px]']:focus-within
+    > div[class*='bg-btnPrimary'][class*='h-[24px]'] {
+    height: 24px !important;
+    min-height: 24px !important;
+    max-height: 24px !important;
+    > * {
+      opacity: 1;
+    }
+  }
+  // Publicada: aro verde mas fino y suave (antes 2 px a todo color).
+  .ring-green-500 {
+    --tw-ring-color: rgba(52, 199, 120, 0.6);
+  }
+
+  // Advertencia del editor ("Tu publicacion debe..."): rojo apagado en vez de
+  // rojo chillon; sigue siendo claramente un aviso, sin gritar.
+  [class*='bg-[#FF3F3F]'] {
+    background: rgba(239, 68, 68, 0.14) !important;
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.5);
+    transition: background-color 0.2s var(--lanza-ease);
+    &:hover {
+      background: rgba(239, 68, 68, 0.22) !important;
+    }
+  }
+  .light [class*='bg-[#FF3F3F]'] {
+    background: rgba(239, 68, 68, 0.1) !important;
+    color: #b91c1c;
+  }
+
+  // Analiticas: cifras grandes con mejor ritmo y tarjetas con filo y respuesta.
+  [class*='text-[36px]'][class*='font-semibold'] {
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+  [class*='rounded']:has(> * [class*='text-[36px]'][class*='font-semibold']):not(:has([class*='rounded']:has([class*='text-[36px]'][class*='font-semibold']))) {
+    border: 1px solid var(--new-table-border);
+    transition: border-color 0.2s var(--lanza-ease), box-shadow 0.2s var(--lanza-ease);
+    &:hover {
+      border-color: rgba(200, 164, 94, 0.4);
+      box-shadow: 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+    }
+  }
+}
+
+@media (hover: none) {
+  // En pantallas tactiles no hay hover: la barra de acciones queda abierta.
+  html div.group[class*='rounded-[10px]'] > div[class*='bg-btnPrimary'][class*='h-[24px]'] {
+    height: 24px !important;
+    min-height: 24px !important;
+    max-height: 24px !important;
+  }
+}
